@@ -46,7 +46,10 @@ export default {
     cols: Array,
     igoreColumns: Array,
     apiname: String,
-    dialogform: Boolean
+    dialogform: {
+      type : Boolean,
+      default : false
+    }
   },
 
   mounted() {
@@ -73,20 +76,23 @@ export default {
     };
   },
 
-   watch: {
-    editIndex: function (newindex, oldindex) {
+  watch: {
+    editIndex: function(newindex, oldindex) {
       this.form = this.value[newindex];
     }
   },
 
   methods: {
-
     newitem() {
       this.savestate = 0;
+      if (this.dialogform === false) {
+        alert("go to page");
+        this.$router.push({ name: "userform" });
+      }
       this.dialog = true;
     },
 
-    close(){
+    close() {
       this.dialog = false;
       this.clearform();
     },
@@ -113,8 +119,17 @@ export default {
     editItem(item) {
       //var url = this.baseurl + this.apiname + "/" + item.id;
       //alert(url);
+
       this.editIndex = this.value.findIndex(v => v.id === item.id);
-      alert(this.editIndex)
+      alert(this.editIndex);
+
+      if (!this.dialogform) {
+        this.$router.push({
+          name: "userform",
+          params: { id: this.value[this.editIndex] }
+        });
+      }
+
       this.dialog = true;
     },
     cutcol() {
